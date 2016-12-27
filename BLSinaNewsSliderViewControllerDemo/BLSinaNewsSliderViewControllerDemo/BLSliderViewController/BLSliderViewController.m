@@ -20,8 +20,8 @@ static const CGFloat optionalViewHeight = 40.0;
 
 @implementation BLSliderViewController
 {
-    /** 缓存VC */
-    NSMutableArray<NSNumber *> *_cacheVC;
+    /** 缓存VC index */
+    NSMutableArray<NSNumber *> *_cacheVCIndex;
 }
 - (void)dealloc{
     [self removeObserver:_optionalView forKeyPath:@"_optionalView.sliderView.frame"];
@@ -37,7 +37,7 @@ static const CGFloat optionalViewHeight = 40.0;
 
 /** 添加子视图 */
 - (void)initSubViews{
-    _cacheVC = [NSMutableArray arrayWithCapacity:0];
+    _cacheVCIndex = [NSMutableArray arrayWithCapacity:0];
     self.view.frame = CGRectMake(self.view.frame.origin.x, [self getOptionalStartY], self.view.frame.size.width, optionalViewHeight + [self getScrollViewHeight]);
     
     [self.view addSubview:self.optionalView];
@@ -116,8 +116,8 @@ static const CGFloat optionalViewHeight = 40.0;
     // 添加子控制器
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(bl_sliderViewController:subViewControllerAtIndxe:)]) {
         UIViewController *vc = [self.dataSource bl_sliderViewController:self subViewControllerAtIndxe:index];
-        if (![_cacheVC containsObject:[NSNumber numberWithInteger:index]]) {
-            [_cacheVC addObject:[NSNumber numberWithInteger:index]];
+        if (![_cacheVCIndex containsObject:[NSNumber numberWithInteger:index]]) {
+            [_cacheVCIndex addObject:[NSNumber numberWithInteger:index]];
             vc.view.frame = CGRectMake(index * vc.view.frame.size.width, 0, vc.view.frame.size.width , self.mainScrollView.frame.size.height);
             [self addChildViewController:vc];
             [self.mainScrollView addSubview:vc.view];
