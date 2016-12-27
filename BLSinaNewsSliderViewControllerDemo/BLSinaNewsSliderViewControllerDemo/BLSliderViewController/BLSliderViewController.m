@@ -19,7 +19,10 @@
 static const CGFloat optionalViewHeight = 40.0;
 
 @implementation BLSliderViewController
-
+{
+    /** 缓存VC */
+    NSMutableArray<NSNumber *> *_cacheVC;
+}
 - (void)dealloc{
     [self removeObserver:_optionalView forKeyPath:@"_optionalView.sliderView.frame"];
 }
@@ -34,20 +37,14 @@ static const CGFloat optionalViewHeight = 40.0;
 
 /** 添加子视图 */
 - (void)initSubViews{
+    _cacheVC = [NSMutableArray arrayWithCapacity:0];
     self.view.frame = CGRectMake(self.view.frame.origin.x, [self getOptionalStartY], self.view.frame.size.width, optionalViewHeight + [self getScrollViewHeight]);
     
     [self.view addSubview:self.optionalView];
     [self.view addSubview:self.mainScrollView];
     self.view.backgroundColor = [UIColor whiteColor];
-    // 添加子控制器
-    if (self.dataSource && [self.dataSource respondsToSelector:@selector(bl_sliderViewController:subViewControllerAtIndxe:)]) {
-        for (NSInteger i = 0; i < self.titleArray.count; i++) {
-            UIViewController *vc = [self.dataSource bl_sliderViewController:self subViewControllerAtIndxe:i];
-            vc.view.frame = CGRectMake(self.view.frame.size.width * i, 0, vc.view.frame.size.width , self.mainScrollView.frame.size.height);
-            [self addChildViewController:vc];
-            [self.mainScrollView addSubview:vc.view];
-        }
-    }
+    [self scrollViewDidScroll:self.mainScrollView];
+    
     self.mainScrollView.contentSize = CGSizeMake(_titleArray.count *self.view.frame.size.width, self.mainScrollView.frame.size.height);
 }
 
@@ -90,6 +87,8 @@ static const CGFloat optionalViewHeight = 40.0;
 #pragma mark - - scrollView
 /** 偏移量控制显示状态 */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    NSInteger index = scrollView.contentOffset.x / scrollView.frame.size.width;
+    [self initializeSubViewControllerAtIndex:index];
     self.optionalView.contentOffSetX = scrollView.contentOffset.x;
 }
 
@@ -101,7 +100,6 @@ static const CGFloat optionalViewHeight = 40.0;
     }else{
         return 20;
     }
-    
 }
 
 - (CGFloat)getScrollViewHeight{
@@ -109,6 +107,20 @@ static const CGFloat optionalViewHeight = 40.0;
         return [self.dataSource bl_viewOfChildViewControllerHeightInSliderViewController];
     }else{
         return [UIScreen mainScreen].bounds.size.height - optionalViewHeight - 20;
+    }
+}
+
+- (void)initializeSubViewControllerAtIndex:(NSInteger)index{
+    
+    // 添加子控制器
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(bl_sliderViewController:subViewControllerAtIndxe:)]) {
+        UIViewController *vc = [self.dataSource bl_sliderViewController:self subViewControllerAtIndxe:index];
+        if (![_cacheVC containsObject:[NSNumber numberWithInteger:index]]) {
+            [_cacheVC addObject:[NSNumber numberWithInteger:index]];
+            vc.view.frame = CGRectMake(index * vc.view.frame.size.width, 0, vc.view.frame.size.width , self.mainScrollView.frame.size.height);
+            [self addChildViewController:vc];
+            [self.mainScrollView addSubview:vc.view];
+        }
     }
 }
 

@@ -79,11 +79,15 @@ static const CGFloat itemWidth = 60;
 - (void)setContentOffSetX:(CGFloat)contentOffSetX{
     _contentOffSetX = contentOffSetX;
     NSInteger index = (NSInteger)contentOffSetX / (NSInteger)[UIScreen mainScreen].bounds.size.width;
+    // progress 0(屏幕边缘开始) -  1 （满屏结束）
     CGFloat progress =( _contentOffSetX - index * [UIScreen mainScreen].bounds.size.width )/ [[UIScreen mainScreen]bounds].size.width;
+    // 左右选项卡（item）
     BLTitleItem *leftItem = [self viewWithTag:index + 100];
     BLTitleItem *rightItem = [self viewWithTag:index + 101];
+    // item 根据progress改变状态
     leftItem.progress = 1 - progress;
     rightItem.progress = progress;
+    // 滑条sliderView 根据progress 改变状态
     CGRect frame = _sliderView.frame;
     frame.origin.x = index * itemWidth + (itemWidth - sliderViewWidth)/2;
     _sliderView.frame = frame;
