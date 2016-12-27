@@ -43,7 +43,7 @@ static const CGFloat optionalViewHeight = 40.0;
     [self.view addSubview:self.optionalView];
     [self.view addSubview:self.mainScrollView];
     self.view.backgroundColor = [UIColor whiteColor];
-    [self scrollViewDidScroll:self.mainScrollView];
+    [self initializeSubViewControllerAtIndex:0];
     
     self.mainScrollView.contentSize = CGSizeMake(_titleArray.count *self.view.frame.size.width, self.mainScrollView.frame.size.height);
 }
@@ -73,6 +73,7 @@ static const CGFloat optionalViewHeight = 40.0;
         _mainScrollView.showsVerticalScrollIndicator = NO;
         _mainScrollView.showsHorizontalScrollIndicator = NO;
         _mainScrollView.pagingEnabled = YES;
+        _mainScrollView.bounces = NO;
     }
     return _mainScrollView;
 }
@@ -87,8 +88,8 @@ static const CGFloat optionalViewHeight = 40.0;
 #pragma mark - - scrollView
 /** 偏移量控制显示状态 */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    NSInteger index = scrollView.contentOffset.x / scrollView.frame.size.width;
-    [self initializeSubViewControllerAtIndex:index];
+    NSInteger index = scrollView.contentOffset.x / (scrollView.frame.size.width + 1);
+    [self initializeSubViewControllerAtIndex:index + 1];
     self.optionalView.contentOffSetX = scrollView.contentOffset.x;
 }
 
