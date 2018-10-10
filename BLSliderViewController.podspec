@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name = 'BLSliderViewController'
-s.version = '1.0.2'
+s.version = '1.0.3'
 s.license = { :type => "MIT", :file => "LICENSE"}
 s.summary = 'A BLSliderViewController on iOS.'
 s.homepage = 'https://github.com/boundlessocean/sliderViewController'
