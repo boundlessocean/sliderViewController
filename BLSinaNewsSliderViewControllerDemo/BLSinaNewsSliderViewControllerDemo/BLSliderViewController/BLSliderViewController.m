@@ -52,7 +52,7 @@ static const CGFloat optionalViewHeight = 40.0;
 - (void)dealButtonCallBackBlcok{
     __weak BLSliderViewController *weakSelf = self;
     _optionalView.titleItemClickedCallBackBlock = ^(NSInteger index){
-        weakSelf.mainScrollView.contentOffset = CGPointMake((index - 100) * self.view.frame.size.width , 0);
+        weakSelf.mainScrollView.contentOffset = CGPointMake((index - 100) * weakSelf.view.frame.size.width , 0);
     };
 }
 

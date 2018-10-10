@@ -19,7 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor grayColor];
-    [self sliderVC];
+    [self addChildViewController:_sliderVC];
+    [self.view addSubview:_sliderVC.view];
 }
 
 #pragma mark - - lazy load
@@ -27,8 +28,6 @@
     if (!_sliderVC) {
         _sliderVC = [BLSliderViewController new];
         _sliderVC.dataSource = self;
-        [self addChildViewController:_sliderVC];
-        [self.view addSubview:_sliderVC.view];
     }
     return _sliderVC;
 }
@@ -42,11 +41,11 @@
     return [LLViewController new];
 }
 
-//- (CGFloat)bl_optionalViewStartYInSliderViewController{
-//    return 40;
-//}
-//
-//- (CGFloat)bl_viewOfChildViewControllerHeightInSliderViewController{
-//    return self.view.frame.size.height - 40 - 40;
-//}
+- (CGFloat)bl_optionalViewStartYInSliderViewController{
+    return 40;
+}
+
+- (CGFloat)bl_viewOfChildViewControllerHeightInSliderViewController{
+    return self.view.frame.size.height - 40 - 40;
+}
 @end

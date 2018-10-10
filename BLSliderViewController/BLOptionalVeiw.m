@@ -12,18 +12,22 @@
 @interface BLOptionalVeiw ()
 /** 滑动条 */
 @property (nonatomic, strong) BLSliderView *sliderView;
-
+@property (nonatomic, strong) UIView *lineView;
 @end
 
 static const CGFloat sliderViewWidth = 15;
-static const CGFloat itemWidth = 60;
+#define kItemWidth SCREEN_WIDTH/2
+//#define sliderViewWidth SCREEN_WIDTH/2
+//static const CGFloat itemWidth = 60;
 @implementation BLOptionalVeiw
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.sliderView];
+        [self addSubview:self.lineView];
         /** 监听frame改变 */
         [self addObserver:self forKeyPath:@"_sliderView.frame" options:NSKeyValueObservingOptionNew context:nil];
+        
     }
     return self;
 }
@@ -33,8 +37,8 @@ static const CGFloat itemWidth = 60;
                       ofObject:(id)object
                         change:(NSDictionary<NSKeyValueChangeKey,id> *)change
                        context:(void *)context{
-    CGFloat itemVisionblePositionMax = _sliderView.frame.origin.x - (itemWidth - sliderViewWidth)/2 + 2*itemWidth;
-    CGFloat itemVisionblePositionMin = _sliderView.frame.origin.x - (itemWidth - sliderViewWidth)/2 - itemWidth;
+    CGFloat itemVisionblePositionMax = _sliderView.frame.origin.x - (kItemWidth - sliderViewWidth)/2 + 2*kItemWidth;
+    CGFloat itemVisionblePositionMin = _sliderView.frame.origin.x - (kItemWidth - sliderViewWidth)/2 - kItemWidth;
     
     // 右滑
     if (itemVisionblePositionMax >= self.frame.size.width + self.contentOffset.x &&
@@ -59,7 +63,7 @@ static const CGFloat itemWidth = 60;
     
     // 添加所有item
     for (NSInteger i = 0; i < titleArray.count; i++) {
-        BLTitleItem *item = [[BLTitleItem alloc] initWithFrame:CGRectMake(i*itemWidth, 0, itemWidth, self.frame.size.height)];
+        BLTitleItem *item = [[BLTitleItem alloc] initWithFrame:CGRectMake(i*kItemWidth, 0, kItemWidth, self.frame.size.height)];
         [item addTarget:self action:@selector(itemClicked:) forControlEvents:UIControlEventTouchUpInside];
         [item setTitle:titleArray[i] forState:UIControlStateNormal];
         item.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -73,7 +77,7 @@ static const CGFloat itemWidth = 60;
     [firstItem setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     firstItem.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
     
-    self.contentSize = CGSizeMake(itemWidth*titleArray.count, self.frame.size.height);
+    self.contentSize = CGSizeMake(kItemWidth*titleArray.count, self.frame.size.height);
 }
 
 - (void)setContentOffSetX:(CGFloat)contentOffSetX{
@@ -89,7 +93,7 @@ static const CGFloat itemWidth = 60;
     rightItem.progress = progress;
     // 滑条sliderView 根据progress 改变状态
     CGRect frame = _sliderView.frame;
-    frame.origin.x = index * itemWidth + (itemWidth - sliderViewWidth)/2;
+    frame.origin.x = index * kItemWidth + (kItemWidth - sliderViewWidth)/2;
     _sliderView.frame = frame;
     _sliderView.progress = progress;
 }
@@ -98,13 +102,23 @@ static const CGFloat itemWidth = 60;
 
 - (BLSliderView *)sliderView{
     if (!_sliderView) {
-        _sliderView = [[BLSliderView alloc] initWithFrame:CGRectMake((itemWidth - sliderViewWidth)/2, self.frame.size.height - 4, sliderViewWidth, 2)];
+        _sliderView = [[BLSliderView alloc] initWithFrame:CGRectMake((kItemWidth - sliderViewWidth)/2, self.frame.size.height - 2, sliderViewWidth, 2)];
         _sliderView.backgroundColor = [UIColor redColor];
         _sliderView.layer.cornerRadius = 2;
         _sliderView.layer.masksToBounds = YES;
-        _sliderView.itemWidth = itemWidth;
+        _sliderView.itemWidth = kItemWidth;
+        _sliderView.sliderWidth = sliderViewWidth;
     }
     return _sliderView;
+}
+
+- (UIView *)lineView{
+    if (!_lineView) {
+        _lineView = [UIView new];
+        _lineView.backgroundColor = [UIColor colorWithHexString:@"#e0e0e0"];
+        _lineView.frame = CGRectMake(0, self.height-0.5, self.frame.size.width, 0.5);
+    }
+    return _lineView;
 }
 
 
@@ -119,7 +133,7 @@ static const CGFloat itemWidth = 60;
     [currentItem setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     
     CGRect frame = _sliderView.frame;
-    frame.origin.x = (sender.tag - 100) * itemWidth + (itemWidth - sliderViewWidth)/2;
+    frame.origin.x = (sender.tag - 100) * kItemWidth + (kItemWidth - sliderViewWidth)/2;
     
     [UIView animateWithDuration:0.2 animations:^{
         sender.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);

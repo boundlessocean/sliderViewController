@@ -13,4 +13,5 @@
 @property (nonatomic, assign) CGFloat progress;
 /** item宽 */
 @property (nonatomic, assign) CGFloat itemWidth;
+@property (nonatomic, assign) CGFloat sliderWidth;
 @end

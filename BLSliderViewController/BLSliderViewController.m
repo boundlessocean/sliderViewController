@@ -88,9 +88,14 @@ static const CGFloat optionalViewHeight = 40.0;
 #pragma mark - - scrollView
 /** 偏移量控制显示状态 */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    NSInteger index = scrollView.contentOffset.x / (scrollView.frame.size.width + 1);
-    [self initializeSubViewControllerAtIndex:index + 1];
+    NSInteger index = scrollView.contentOffset.x / (scrollView.frame.size.width - 1);
+    if (scrollView.contentOffset.x > 0) {
+        [self.view endEditing:YES];
+    }
+    
     self.optionalView.contentOffSetX = scrollView.contentOffset.x;
+    if (index == 0) return;
+    [self initializeSubViewControllerAtIndex:index];
 }
 
 #pragma mark - - private
