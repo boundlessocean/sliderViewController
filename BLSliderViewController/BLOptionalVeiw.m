@@ -16,7 +16,7 @@
 @end
 
 static const CGFloat sliderViewWidth = 15;
-#define kItemWidth SCREEN_WIDTH/2
+#define kItemWidth [UIScreen mainScreen].bounds.size.width/2
 //#define sliderViewWidth SCREEN_WIDTH/2
 //static const CGFloat itemWidth = 60;
 @implementation BLOptionalVeiw
@@ -116,7 +116,7 @@ static const CGFloat sliderViewWidth = 15;
     if (!_lineView) {
         _lineView = [UIView new];
         _lineView.backgroundColor = [UIColor colorWithHexString:@"#e0e0e0"];
-        _lineView.frame = CGRectMake(0, self.height-0.5, self.frame.size.width, 0.5);
+        _lineView.frame = CGRectMake(0, self.frame.size.height-0.5, self.frame.size.width, 0.5);
     }
     return _lineView;
 }
